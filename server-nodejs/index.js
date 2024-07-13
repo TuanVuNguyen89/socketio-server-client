@@ -16,14 +16,10 @@ app.get('/', (req, res) => {
 
 io.on("connection", (socket) => {
     console.log('Client connected');
-    socket.emit("hello", "world");
+    socket.emit("message", "world");
 
-    socket.on("update item", (arg1, arg2, callback) => {
-        console.log(arg1); // 1
-        console.log(arg2); // { name: "updated" }
-        callback({
-            status: "ok"
-        });
+    socket.on("message", (arg1, arg2) => {
+        console.log("Message from client: ", arg1, " ", arg2);
     });
 });
 

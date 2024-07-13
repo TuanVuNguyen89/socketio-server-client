@@ -6,7 +6,6 @@ import java.util.Collections;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -34,25 +33,14 @@ public class App {
             }
         });
 
-        // Listen for "hello" event
-        socket.on("hello", new Emitter.Listener() {
+        socket.on("message", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                System.out.println("Received message: " + args[0]);
+                System.out.println("Message from server: " + args[0]);
             }
         });
 
-        socket.emit("update item", 1, new JSONObject(Collections.singletonMap("name", "updated")), new Ack() {
-            @Override
-            public void call(Object... args) {
-                JSONObject response = (JSONObject) args[0];
-                try {
-                    System.out.println(response.getString("status"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } // "ok"
-            }
-        });
+        socket.emit("message", 1, new JSONObject(Collections.singletonMap("name", "updated")));
 
         socket.connect();
     }
